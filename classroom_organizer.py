@@ -1,21 +1,42 @@
-
 # Import modules above this line
 from roster import student_roster
-
+import itertools
 class ClassroomOrganizer:
-  def __init__(self):
-    self.sorted_names = self._sort_alphabetically(student_roster)
+    
+    def __init__(self):
+        self.sorted_names = self._sort_alphabetically(student_roster)
 
-  def _sort_alphabetically(self,students):
-    names = []
-    for student_info in students:
-      name = student_info['name']
-      names.append(name)
-    return sorted(names)
+    def __iter__(self):
+        self.index = 0;
+        return self
+    
+    def __next___(self):
+        each_student = self.sorted_names[self.index]
+        self.index += 1
+        if self.index >= 10:
+            raise StopIteration
+        return each_student
+        
 
-  def get_students_with_subject(self, subject):
-    selected_students = []
-    for student in student_roster:
-      if student['favorite_subject'] == subject:
-        selected_students.append((student['name'], subject))
-    return selected_students
+    def table_seating(self):
+        names = []
+        for student in student_roster:
+            name = student['name']
+            names.append(name)
+            tables = list(iter.combinations(names,2))
+        return tables
+
+    def _sort_alphabetically(self,students):
+        names = []
+        for student_info in students:
+            name = student_info['name']
+            names.append(name)
+            return sorted(names)
+    
+    def get_students_with_subject(self, subject):
+        selected_students = []
+        for student in student_roster:
+            if student['favorite_subject'] == subject:
+                selected_students.append((student['name'], subject))
+                return selected_students
+    
